@@ -7,12 +7,12 @@ using namespace std;
 
 template<const int BASE, const int MANT, int EXPMAX, int EXPMIN>
 struct _mfloat {
-    typedef _mfloat<MANT, BASE, EXPMAX, EXPMIN> mfloat;
+    typedef _mfloat<BASE, MANT, EXPMAX, EXPMIN> mfloat;
 
     _mfloat(){ mant.fill(0); }
     _mfloat(array<int, MANT> mant, int exp) : mant(mant), exp(exp) {}
     _mfloat(ld x){
-        if(x < 0) sign = -1, x = -1;
+        if(x < 0) sign = -1, x *= -1;
 
         // m1 . m2 m3 * BASE^exp  |  mi < BASE
 
@@ -25,6 +25,8 @@ struct _mfloat {
             m = digi;
             x = (x - digi) * BASE; 
         }
+
+        // arredonda?
     }
 
     ld toDouble(){
@@ -39,14 +41,40 @@ struct _mfloat {
     }
 
     void printReal(){
-        cout << mant[0] << " . ";
-        for(int i=1; i<mant.size(); i++) cout << mant[i] << " ";
-
-        cout << "  *  " << BASE << "^" << exp << endl;
+        cout << mant[0] << ".";
+        for(int i=1; i<mant.size(); i++) cout << (BASE > 10 ? " " : "") << mant[i];
+        cout << " * " << BASE << "^" << exp << endl;
     }
 
     mfloat operator+ (const mfloat m) const {
+        // aumenta a mantissa e iguala a base
+        auto a = this->extend();
+        auto b = m.extend();
+        
+        a.shiftL(MANT - 1); // 0 . m1 m2 m3 0 0
+        b.shiftL(MANT - 1); // 0 . m1 m2 m3 0 0
+        (a.exp < b.exp ? a : b).shiftR(abs(a.exp - b.exp)); //a.exp = b.exp
+        // --- //
+        
+        auto sum = a;
+        int carry = 0;
+        for(int i=a.mant.size()-1; i >= 0; i--){
+            sum.mant[i] = a.mant[i] + b.mant[i] + carry;
+            carry = sum.mant[i] / BASE;
+            sum.mant[i] %= BASE;
+        }
+
+        assert(carry == 0);
+
+        sum.fix();
+
         mfloat ans;
+        ans.exp = sum.exp;
+        for(int i=0; i<ans.mant.size(); i++)
+            ans.mant[i] = sum.mant[i];
+
+        // arredonda?
+
         return ans;
     } 
 
@@ -77,21 +105,39 @@ struct _mfloat {
     bool operator>=(const mfloat m){ return !(*this <  m); }
     bool operator!=(const mfloat m){ return !(*this == m); }
 
-    private:
     array<int, MANT> mant;
     int exp = 0;
     short sign = 0;
 
-    void changeExp(int nwExp){
+    void shiftL(int sh){
+        auto nwMant = mant;
+        nwMant.fill(0);
+
+        for(int i=0; i<mant.size(); i++) if(i+sh >= 0 && i+sh < mant.size()){
+            nwMant[i] = mant[i+sh];
+        }
         
+        mant = nwMant;
+        exp -= sh;
+    }
+    void shiftR(int sh){ shiftL(-sh); }
+
+    void fix(){
+
+        int dlt = 0;
+        while(dlt < mant.size() && mant[dlt] == 0) dlt++;
+
+        if(dlt == mant.size()) exp = EXPMIN; // 0.00
+        else shiftL(dlt);
     }
 
     // retorna um mfloat com o dobro da mantissa
-    _mfloat<MANT*2, BASE, EXPMAX, EXPMIN> extend(){
-        _mfloat<MANT*2, BASE, EXPMAX, EXPMIN> ans;
+    _mfloat<BASE, MANT*2, EXPMAX, EXPMIN> extend() const {
+        _mfloat<BASE, MANT*2, EXPMAX, EXPMIN> ans;
 
         // 0 . 0 0 m1 m2 m3
         for(int i=0; i<mant.size(); i++) ans.mant[i+MANT] = mant[i];
+        ans.exp = exp + MANT;
 
         return ans;
     }
