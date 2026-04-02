@@ -272,11 +272,16 @@ struct _mfloat
         return ans;
     }
 
-    void printReal() const {
-        if(sign < 0) cout << "-";
-        cout << mant[0] << ".";
-        for(int i=1; i<mant.size(); i++) cout << (BASE > 10 ? " " : "") << mant[i];
-        cout << " * " << BASE << "^" << exp << endl;
+    void printReal() const { cout << (*this) << endl; } //depreciado, use cout << mx << endl;
+
+    friend ostream& operator<<(ostream& os, const mfloat& p){
+        if(p.sign < 0) os << "-";
+        
+        os << p.mant[0] << ".";
+        
+        for (int i = 1; i < MANT; i++) os << (BASE > 10 ? " " : "") << p.mant[i];
+
+        return os << " * " << BASE << "^" << p.exp;
     }
 
     array<int, MANT> mant;

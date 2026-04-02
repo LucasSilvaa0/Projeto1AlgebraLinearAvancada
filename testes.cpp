@@ -16,13 +16,10 @@ void testSum(long double x = 1234.56789, long double y = 34.54321){
     cout << x << " + " << y << " = " << x+y << endl;
     cout << mx.toDouble() << " + " << my.toDouble() << " = " << sum.toDouble() << endl;
     
-    cout << endl;
-    cout << "Diff: " << (x+y) - sum.toDouble() << endl;
-    cout << endl;
-
-    mx.printReal();
-    my.printReal();
-    sum.printReal();
+    auto error = (x+y) - sum.toDouble();
+    cout << "\n" << "error: " << error << " or " << mfloat(error) << "\n\n";
+    
+    cout << mx << " + " << my << " = " << sum << endl;
 }
 
 void testSub(long double x = 1234.56789, long double y = 1233.56788){
@@ -34,14 +31,11 @@ void testSub(long double x = 1234.56789, long double y = 1233.56788){
 
     cout << x << " - " << y << " = " << x-y << endl;
     cout << mx.toDouble() << " - " << my.toDouble() << " = " << sub.toDouble() << endl;
-
-    cout << endl;
-    cout << "Diff: " << (x-y) - sub.toDouble() << endl;
-    cout << endl;
-
-    mx.printReal();
-    my.printReal();
-    sub.printReal();
+    
+    auto error = (x-y) - sub.toDouble();
+    cout << "\n" << "error: " << error << " or " << mfloat(error) << "\n\n";
+    
+    cout << mx << " + " << my << " = " << sub << endl;
 }
 
 
