@@ -10,17 +10,21 @@ class Analise
 public:
     Analise(
         ld _d,   // d
-        ld _Sd,  // Sd = S(d)
-        ld _Scd, // Sc(d)
+        ld _S,  // S = S(d)
+        ld _Sc, // Sc(d)
         ld _dn   // dn = S-1(Sc(d))
-    ) : d(_d), Sd(_Sd), Scd(_Scd), dn(_dn) {}
+    ) : d(_d), S(_S), Sc(_Sc), dn(_dn) {}
 
     ld Direta() {
-        return abs(Sd - Scd);
+        if (S == 0)
+            return (Sc == 0) ? 0 : numeric_limits<ld>::infinity();
+        return abs((S - Sc) / S);
     }
     
     ld Inversa() {
-        return abs(dn - Sd);
+        if (d == 0)
+            return (dn == 0) ? 0 : numeric_limits<ld>::infinity();
+        return abs((d - dn) / d);
     }
 
     void MelhorAnalise() {
@@ -36,8 +40,8 @@ public:
     }
 
     ld d;
-    ld Sd;
-    ld Scd;
+    ld S;
+    ld Sc;
     ld dn;
 };
 
