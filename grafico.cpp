@@ -53,14 +53,14 @@ int main()
     }
 
     plt::figure(1);
-    plt::named_plot("y = d*(val1 - val2)", x_values, y_values);
-    plt::named_plot("y = d*(a - b)", x_values, y2_values);
+    plt::named_plot("y = (d*(val1 - val2))^3", x_values, y_values);
+    plt::named_plot("y = (d*(a - b))^3", x_values, y2_values);
     plt::title("Função: S vs Sc");
     plt::legend();
 
     plt::figure(2);
-    plt::named_plot("y = | S - Sc |", x_values, analise_direta_values);
-    plt::named_plot("y = | d - dn |", x_values, analise_inversa_values);
+    plt::named_plot("y = | (S - Sc) /  S |", x_values, analise_direta_values);
+    plt::named_plot("y = | (d - dn) / d |", x_values, analise_inversa_values);
     plt::title("Erros: Direta vs Inversa");
     plt::legend();
     plt::show();
