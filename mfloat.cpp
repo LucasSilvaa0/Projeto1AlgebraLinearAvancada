@@ -302,7 +302,7 @@ struct _mfloat
     mfloat& operator*= (const mfloat m){ return *this = *this * m; }
     mfloat& operator/= (const mfloat m){ return *this = *this / m; }
 
-    bool operator==(const mfloat m) const { return this->sign == m.sign && this->exp == m.exp && this.mant == m.mant; }
+    bool operator==(const mfloat m) const { return this->sign == m.sign && this->exp == m.exp && this->mant == m.mant; }
     bool operator< (const mfloat m) const { return tie(this->sign, this->exp, this->mant) < tie(m.sign, m.exp, m.mant); }
     bool operator<=(const mfloat m) const { return  (*this <  m) || (*this == m); }
     bool operator> (const mfloat m) const { return !(*this <= m); }
