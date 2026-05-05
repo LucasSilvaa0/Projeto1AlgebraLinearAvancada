@@ -10,6 +10,7 @@ import ReactFlow, {
   useEdgesState,
   Node,
 } from 'reactflow';
+import { buildTransitionMatrix } from '../utils/markov';
 
 import 'reactflow/dist/style.css';
 
@@ -38,7 +39,7 @@ export default function Graph() {
 
     setEdges((eds) =>
         eds.map((e) =>
-        e.id === edge.id
+        e.source === edge.source && e.target == edge.target
             ? {
                 ...e,
                 data: { ...e.data, weight: parsed },
@@ -47,6 +48,20 @@ export default function Graph() {
             : e
         )
     );
+    
+    setEdges((eds) =>
+        eds.map((e) =>
+        e.target === edge.source && e.source == edge.target
+            ? {
+                ...e,
+                data: { ...e.data, weight: parsed },
+                label: parsed.toString(),
+            }
+            : e
+        )
+    );
+
+    console.log(buildTransitionMatrix(nodes, edges));
   };
 
   // 🔁 conectar nós (com aresta dupla automática)

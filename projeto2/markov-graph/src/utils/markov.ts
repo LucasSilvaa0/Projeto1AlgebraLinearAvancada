@@ -15,15 +15,15 @@ export function buildTransitionMatrix(nodes: any[], edges: any[]) {
     const to = indexMap[edge.target];
     const weight = edge.data.weight;
 
-    matrix[to][from] += weight;
+    matrix[from][to] += weight;
   });
 
-  // normalizar colunas
-  for (let j = 0; j < n; j++) {
+  // normalizar linhas
+  for (let i = 0; i < n; i++) {
     let sum = 0;
-    for (let i = 0; i < n; i++) sum += matrix[i][j];
+    for (let j = 0; j < n; j++) sum += matrix[i][j];
 
-    for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
       matrix[i][j] /= sum || 1;
     }
   }
