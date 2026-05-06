@@ -68,13 +68,6 @@ export default function Graph() {
 
     let matriz = buildTransitionMatrix(nodes, edges);
     setMatrizAtual(matriz);
-
-    console.log(nodes)
-    console.log(edges);
-    console.log(matriz);
-    console.log(distributionAfterT(matriz, 1, 1));
-    console.log(distributionAfterT(matriz, 2, 1));
-    console.log(distributionAfterT(matriz, 3, 1));
   };
 
   // 🔁 conectar nós (com aresta dupla automática)
